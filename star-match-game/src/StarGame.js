@@ -1,8 +1,25 @@
 import "./Style.css";
-import {utils , colors}  from './utils'
-import React , { useState } from "react";
+import PlayNumber from "./PlayNumber";
+import StarsDisplay from "./StarsDisplay";
+import { utils, colors } from "./utils";
+import React, { useState } from "react";
 const StarGame = () => {
-  const [stars, setStars] = useState(utils.random(1,9));
+  const [stars, setStars] = useState(utils.random(1, 9));
+  const [availableNums , setAvailableNums] = useState([1,2,3,4,5]);
+  const [candidateNums , setCandidateNums] = useState([2,3]);
+
+const candidateAreWrong = utils.sum(candidateNums) > stars;
+
+const statusCondition = number =>{
+ if (!availableNums.includes(number)){
+  return 'used';
+ }
+
+ if (candidateNums.includes(number)){
+  return candidateAreWrong ? 'wrong' : 'candidate'
+ }
+ return 'available'
+}
 
   return (
     <div className="App">
@@ -12,15 +29,14 @@ const StarGame = () => {
         </div>
         <div className="body">
           <div className="left">
-            {utils.range(1, stars).map((starId) => (
-              <div key={starId} className="star" />
-            ))}
+            <StarsDisplay count={stars} />
           </div>
           <div className="right">
             {utils.range(1, 9).map((number) => (
-              <button key={number} className="number">
-                {number}
-              </button>
+              <PlayNumber key={number}
+              number={number}
+              status= {statusCondition(number)}
+              />
             ))}
           </div>
         </div>
