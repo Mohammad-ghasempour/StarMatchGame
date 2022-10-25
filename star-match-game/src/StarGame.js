@@ -5,21 +5,41 @@ import { utils, colors } from "./utils";
 import React, { useState } from "react";
 const StarGame = () => {
   const [stars, setStars] = useState(utils.random(1, 9));
-  const [availableNums , setAvailableNums] = useState([1,2,3,4,5]);
-  const [candidateNums , setCandidateNums] = useState([2,3]);
+  const [availableNums, setAvailableNums] = useState(utils.range(1, 9));
+  const [candidateNums, setCandidateNums] = useState([]);
 
-const candidateAreWrong = utils.sum(candidateNums) > stars;
+  const candidateAreWrong = utils.sum(candidateNums) > stars;
 
-const statusCondition = number =>{
- if (!availableNums.includes(number)){
-  return 'used';
- }
+  const statusCondition = (number) => {
+    if (!availableNums.includes(number)) {
+      return "used";
+    }
+    if (candidateNums.includes(number)) {
+      return candidateAreWrong ? "wrong" : "candidate";
+    }
+    return "available";
+  };
 
- if (candidateNums.includes(number)){
-  return candidateAreWrong ? 'wrong' : 'candidate'
- }
- return 'available'
-}
+  const onClickChange = (number, currentStatus) => {
+    if (currentStatus === "used") {
+      return;
+    }
+    const newCandidateNums =
+      currentStatus === "available"
+        ? candidateNums.concat(number)
+        : candidateNums.filter(cn=> cn!==number);
+
+    if (utils.sum(newCandidateNums) === stars) {
+      const newAvailableNums = availableNums.filter(
+        (n) => !newCandidateNums.includes(n)
+      );
+      setAvailableNums(newAvailableNums);
+      setCandidateNums([]);
+      setStars(utils.randomSumIn(newAvailableNums, 9));
+    } else {
+      setCandidateNums(newCandidateNums);
+    }
+  };
 
   return (
     <div className="App">
@@ -33,9 +53,11 @@ const statusCondition = number =>{
           </div>
           <div className="right">
             {utils.range(1, 9).map((number) => (
-              <PlayNumber key={number}
-              number={number}
-              status= {statusCondition(number)}
+              <PlayNumber
+                key={number}
+                number={number}
+                onClick={onClickChange}
+                status={statusCondition(number)}
               />
             ))}
           </div>
