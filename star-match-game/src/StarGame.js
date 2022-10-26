@@ -2,19 +2,34 @@ import "./Style.css";
 import PlayNumber from "./PlayNumber";
 import StarsDisplay from "./StarsDisplay";
 import { utils, colors } from "./utils";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PlayAgain from "./PlayAgain";
 const StarGame = () => {
   const [stars, setStars] = useState(utils.random(1, 9));
   const [availableNums, setAvailableNums] = useState(utils.range(1, 9));
   const [candidateNums, setCandidateNums] = useState([]);
+  const [secondsLeft, setSecondsLeft] = useState(10);
+
+  const gameStatus = availableNums.length === 0
+   ? "won" 
+   : secondsLeft === 0 ? "lost" : "active";
+
+  useEffect(() => {
+    if (secondsLeft > 0 && availableNums.length > 0) {
+      const timerId = setTimeout(() => {
+        setSecondsLeft(secondsLeft - 1);
+      }, 1000);
+      return () => clearTimeout(timerId);
+    }
+  });
 
   const resetGame = () => {
     setStars(utils.random(1, 9));
     setAvailableNums(utils.range(1, 9));
     setCandidateNums([]);
+    setSecondsLeft(10);
   };
-  const isGameDone = availableNums.length === 0;
+
   const candidateAreWrong = utils.sum(candidateNums) > stars;
   const statusCondition = (number) => {
     if (!availableNums.includes(number)) {
@@ -27,7 +42,7 @@ const StarGame = () => {
   };
 
   const onClickChange = (number, currentStatus) => {
-    if (currentStatus === "used") {
+    if ( gameStatus !== "active" || currentStatus === "used") {
       return;
     }
     const newCandidateNums =
@@ -55,9 +70,9 @@ const StarGame = () => {
         </div>
         <div className="body">
           <div className="left">
-            {isGameDone ? (
-              <PlayAgain clickToReset={resetGame} />
-            ) : (
+            {gameStatus !== 'active' ? (
+              <PlayAgain gameStatus={gameStatus} clickToReset={resetGame} />
+            ) :  (
               <StarsDisplay count={stars} />
             )}
           </div>
@@ -72,7 +87,7 @@ const StarGame = () => {
             ))}
           </div>
         </div>
-        <div className="timer">Time Remaining: 10</div>
+        <div className="timer">Time Remaining: {secondsLeft}</div>
       </div>
     </div>
   );
