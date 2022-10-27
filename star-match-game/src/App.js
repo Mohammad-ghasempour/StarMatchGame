@@ -1,10 +1,10 @@
-import StarGame from './StarGame';
+import Game from "./Game";
 
 function App() {
   return (
-    <div >
-      <StarGame/>
-           </div>
+    <>
+      <Game />
+    </>
   );
 }
 

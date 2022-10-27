@@ -1,18 +1,17 @@
 import "./Style.css";
 import PlayNumber from "./PlayNumber";
 import StarsDisplay from "./StarsDisplay";
-import { utils, colors } from "./utils";
+import { utils } from "./utils";
 import React, { useState, useEffect } from "react";
 import PlayAgain from "./PlayAgain";
-const StarGame = () => {
+const StarGame = (props) => {
   const [stars, setStars] = useState(utils.random(1, 9));
   const [availableNums, setAvailableNums] = useState(utils.range(1, 9));
   const [candidateNums, setCandidateNums] = useState([]);
   const [secondsLeft, setSecondsLeft] = useState(10);
 
-  const gameStatus = availableNums.length === 0
-   ? "won" 
-   : secondsLeft === 0 ? "lost" : "active";
+  const gameStatus =
+    availableNums.length === 0 ? "won" : secondsLeft === 0 ? "lost" : "active";
 
   useEffect(() => {
     if (secondsLeft > 0 && availableNums.length > 0) {
@@ -23,12 +22,12 @@ const StarGame = () => {
     }
   });
 
-  const resetGame = () => {
-    setStars(utils.random(1, 9));
-    setAvailableNums(utils.range(1, 9));
-    setCandidateNums([]);
-    setSecondsLeft(10);
-  };
+  // const resetGame = () => {
+  //   setStars(utils.random(1, 9));
+  //   setAvailableNums(utils.range(1, 9));
+  //   setCandidateNums([]);
+  //   setSecondsLeft(10);
+  // };
 
   const candidateAreWrong = utils.sum(candidateNums) > stars;
   const statusCondition = (number) => {
@@ -42,7 +41,7 @@ const StarGame = () => {
   };
 
   const onClickChange = (number, currentStatus) => {
-    if ( gameStatus !== "active" || currentStatus === "used") {
+    if (gameStatus !== "active" || currentStatus === "used") {
       return;
     }
     const newCandidateNums =
@@ -70,9 +69,9 @@ const StarGame = () => {
         </div>
         <div className="body">
           <div className="left">
-            {gameStatus !== 'active' ? (
-              <PlayAgain gameStatus={gameStatus} clickToReset={resetGame} />
-            ) :  (
+            {gameStatus !== "active" ? (
+              <PlayAgain gameStatus={gameStatus} clickToReset={props.startNewGame} />
+            ) : (
               <StarsDisplay count={stars} />
             )}
           </div>
