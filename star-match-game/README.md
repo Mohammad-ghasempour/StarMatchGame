@@ -5,7 +5,7 @@ You should be fast enough to do sum of the stars on the left side and click on t
 ## Technics and points that I've use them to develope this project:
 - 1
 - Nested ternary operator (in the 'StarGame' file).
-- Reload game: by call the main function (starGame) and pass a new key value to it, the application reload and reset all the state.
+- Reload game: Use the key attribute to unmount a component and remount it again and clean up its side effect.
 - Custom Hooks: built a custom hooks that manage all the states, side effects and setting values on the states.
 # Getting Started with Create React App
 
