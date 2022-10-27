@@ -1,3 +1,6 @@
+# About the Game
+This is a simple game I am developing my React.js
+You should be fast enough to do sum of the stars on the left side and click on the right numbers to be sum of the stars!
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
